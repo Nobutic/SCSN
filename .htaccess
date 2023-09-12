@@ -1,0 +1,2 @@
+# Hacer que el codigo PHP parezca como otro tipo de codigo
+AddType application/x-httpd-php .asp .py .pl

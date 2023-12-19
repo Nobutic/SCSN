@@ -156,7 +156,15 @@
       parent::conectar();
       $fechaInicio = date('Y-m-d', strtotime($fechaInicio));
       $fechaFin = date('Y-m-d', strtotime($fechaFin));
-      $listaM = parent::query('SELECT * FROM compras WHERE fecha BETWEEN "'.$fechaInicio.'" AND "'.$fechaFin.'" AND id_cliente="'.$id.'" ');
+      if(!empty($id)){
+        $filtroCliente = 'AND id_cliente="'.$id.'"';
+      } else {
+        $filtroCliente = '';
+      }
+      $listaM = parent::query('SELECT c.id_factura, cl.nombre AS nombre_cliente, c.id_cliente, c.fecha, c.tiempo 
+                                FROM compras c
+                                INNER JOIN clientes cl ON c.id_cliente = cl.id 
+                                WHERE fecha BETWEEN "'.$fechaInicio.'" AND "'.$fechaFin.'" '.$filtroCliente);
       
       return $listaM;
 

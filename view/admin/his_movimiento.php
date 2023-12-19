@@ -330,8 +330,6 @@ $clientes = $objeto->listarClientes();
                 $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">Debe elegir la fecha de fin</p>');
             } else if (fechaFin > fechaActual) {
                 $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">La fecha de fin no puede ser mayor a hoy</p>');
-            } else if (idCliente == "") {
-                $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">Debe seleccionar un cliente</p>');
             } else {
                 $.post("filtroM.php", {
                         fechaInicio,

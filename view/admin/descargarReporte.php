@@ -27,15 +27,15 @@
 
 
         /***RECIBIENDO LAS VARIABLE DE LA FECHA Y EL CLIENTE*/
-        $mes     = $_POST['mes'];
-        $anio    = $_POST['anio'];
-        $cliente = $_POST['idCliente'];
+        $fechaInicio    = $_POST['fechaInicio'];
+        $fechaFin       = $_POST['fechaFin'];
+        $cliente        = $_POST['idCliente'];
 
                             
 
         include_once('../../model/servicio.php');
         $objeto = new Servicio();
-        $servicio = $objeto-> mostrarServicio($mes, $anio, $cliente);
+        $servicio = $objeto-> mostrarServicio($fechaInicio, $fechaFin, $cliente);
     ?>
 
 

@@ -1,12 +1,12 @@
 <?php
   
-  $mes = $_POST['mes'];
-  $anio = $_POST['anio'];
+  $fechaInicio = $_POST['fechaInicio'];
+  $fechaFin = $_POST['fechaFin'];
   $cliente = $_POST['idCliente'];
 
   include_once('../../model/cliente.php');
   $objeto2 = new Cliente();
-  $cliente = $objeto2->listarMovimiento($mes, $anio, $cliente);
+  $cliente = $objeto2->listarMovimiento($fechaInicio, $fechaFin, $cliente);
 
 ?>
 

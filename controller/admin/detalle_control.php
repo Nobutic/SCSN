@@ -108,5 +108,6 @@
             </div>
             <div class="modal-footer">
                 <a class="btn btn-success" href="reenviar.php?id=<?php echo $id_servicio; ?>"><i class="fa fa-share"></i> Reenviar</a>
+                <a class="btn btn-primary" href="download.php?id=<?php echo $id_servicio; ?>"><i class="fa fa-download"></i></a>
             </div>
                 <?php } ?>

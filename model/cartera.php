@@ -40,7 +40,7 @@
     public function saldo()
     {
       parent::conectar();
-      $lista_saldo = parent::query('SELECT c.id_factura, id_cliente, c.fecha, fecha_ven, valor, SUM(abono) AS sum_abono, cl.nombre 
+      $lista_saldo = parent::query('SELECT c.id_factura, id_cliente, c.fecha, fecha_ven, valor, SUM(abono) AS sum_abono, cl.nombre, c.tiempo
                                     FROM compras c 
                                     INNER JOIN movimientos m, clientes cl 
                                     WHERE c.id_compra = m.id_factura 

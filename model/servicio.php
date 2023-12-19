@@ -188,9 +188,11 @@
             parent::cerrar();
         }
 
-        public function mostrarServicio($mes, $anio, $cliente)
+        public function mostrarServicio($fechaInicio, $fechaFin, $cliente)
         {
             parent::conectar();
+            $fechaInicio = date('Y-m-d', strtotime($fechaInicio));
+            $fechaFin = date('Y-m-d', strtotime($fechaFin));
             $consulta = 'SELECT s.id_servicio, id_cliente, direccion, c.telefono, ciudad, date_format(fecha, "%d-%m-%Y") AS fecha, c.nombre AS cliente, m.nombre AS modulo, ts.nombre AS servicio, s.descripcion as actividades, hora_inicio, hora_fin, TIMESTAMPDIFF(minute, hora_inicio, hora_fin) as tiempo_conexion, s.tiempo, a.nombre AS asesor, persona_recibe,s.cargo, ticket, t.descripcion, ti.nombre AS tarea, tarea_cliente
                           FROM servicios s
                           INNER JOIN modulos m, tipo_servicio ts, asesores a, clientes c, tareas t, tickets ti
@@ -200,26 +202,16 @@
                           AND c.id = id_cliente
                           AND t.id = s.id_servicio
                           AND t.id_ticket = ti.id
-                          AND MONTH(fecha) = "'.$mes.'" 
-                          AND YEAR(fecha) = "'.$anio.'"
+                          AND fecha BETWEEN "'.$fechaInicio.'" AND  "'.$fechaFin.'"
                           AND id_cliente = "'.$cliente.'"
                           AND s.estado_control = "APROBADO"
                           ORDER BY fecha ASC ';
-            // $consulta = 'SELECT @n := @n + 1 n, id_servicio, c.nombre AS cliente, fecha, ts.nombre AS servicio, c.tiempo
-            //             FROM servicios s, (SELECT @n := 0) m
-            //             INNER JOIN clientes c, tipo_servicio ts
-            //             WHERE id_cliente = c.id
-            //             AND tipo_servicio = ts.id
-            //             AND MONTH(fecha) = "'.$mes.'" 
-            //             AND YEAR(fecha) = "'.$anio.'" 
-            //             ORDER BY fecha ';
             $listaServicios = parent::query($consulta);
             return $listaServicios;
-
             parent::cerrar();
         }
 
-        public function todosServicio($mes, $anio)
+        public function todosServicio($fechaInicio, $fechaFin)
         {
             parent::conectar();
             $consulta = 'SELECT s.id_servicio, id_cliente, direccion, c.telefono, ciudad, date_format(fecha, "%d-%m-%Y") AS fecha, c.nombre AS cliente, m.nombre AS modulo, ts.nombre AS servicio, s.descripcion as actividades, hora_inicio, hora_fin, TIMESTAMPDIFF(minute, hora_inicio, hora_fin) as tiempo_conexion, s.tiempo, a.nombre AS asesor, persona_recibe,s.cargo, ticket, t.descripcion, ti.nombre AS tarea, tarea_cliente
@@ -231,8 +223,7 @@
                           AND c.id = id_cliente
                           AND t.id = s.id_servicio
                           AND t.id_ticket = ti.id
-                          AND MONTH(fecha) = "'.$mes.'" 
-                          AND YEAR(fecha) = "'.$anio.'"
+                          AND fecha BETWEEN "'.$fechaInicio.'" AND "'.$fechaFin.'"
                           AND s.estado_control = "APROBADO"
                           ORDER BY fecha ASC ';
             $listaServicios = parent::query($consulta);

@@ -42,6 +42,7 @@
                 <th>Email</th>
                 <th>Direccion</th>
                 <th>Ciudad</th>
+                <th>Saldo</th>
             </tr>
         </thead>
         
@@ -55,6 +56,7 @@
                 <td><?php echo $client['email'] ?></td>
                 <td><?php echo $client['direccion'] ?></td>
                 <td><?php echo $client['ciudad'] ?></td>
+                <td><?php echo $client['saldo'] ?></td>
             </tr>
             <?php } ?>
         </tbody>

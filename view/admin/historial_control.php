@@ -206,7 +206,6 @@ $servicio = $objeto->historialControl();
                                                 <td><?php echo $dato['asesor'] ?></td>
                                                 <td style="text-align:center">
                                                     <a type="button" class="btn btn-success detalle" aria-label="Detalle" data-balloon-pos="up" id="<?php echo $dato['id_servicio'] ?>"><i class="fa fa-eye"></i></a>
-
                                                 </td>
                                             </tr>
                                         <?php } ?>

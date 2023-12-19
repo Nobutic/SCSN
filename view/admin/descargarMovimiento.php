@@ -27,15 +27,15 @@
 
 
         /***RECIBIENDO LAS VARIABLE DE LA FECHA Y EL CLIENTE*/
-        $mes     = $_POST['mes'];
-        $anio    = $_POST['anio'];
+        $fechaInicio     = $_POST['fechaInicio'];
+        $fechaFin    = $_POST['fechaFin'];
         $cliente = $_POST['idCliente'];
 
                             
 
         include_once('../../model/cliente.php');
         $objeto = new Cliente();
-        $mov = $objeto-> listarMovimiento($mes, $anio, $cliente);
+        $mov = $objeto-> listarMovimiento($fechaInicio, $fechaFin, $cliente);
     ?>
 
 

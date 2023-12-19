@@ -42,6 +42,7 @@
                 <th>VALOR FACTURA</th>
                 <th>ABONOS</th>
                 <th>SALDO</th>
+                <th>TIEMPO</th>
             </tr>
         </thead>
         <tbody>
@@ -54,6 +55,7 @@
                     <td><?php echo $dato['valor'] ?></td>
                     <td><?php echo $dato['sum_abono'] ?></td>
                     <td><?php echo $dato['valor'] - $dato['sum_abono'] ?></td>
+                    <td><?php echo $dato['tiempo'] ?></td>
                 </tr>
             <?php } ?>
         </tbody>

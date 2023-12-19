@@ -188,34 +188,18 @@ $clientes = $objeto->listarClientes();
                             <form action="descargarMovimiento.php" method="post">
                                 <div class="row">
                                     <div class="col-md-2">
-                                        <select name="mes" id="mes" class="form-select" required>
-                                            <option value="">Seleccione mes</option>
-                                            <option value="1">Enero</option>
-                                            <option value="2">Febrero</option>
-                                            <option value="3">Marzo</option>
-                                            <option value="4">Abril</option>
-                                            <option value="5">Mayo</option>
-                                            <option value="6">Junio</option>
-                                            <option value="7">Julio</option>
-                                            <option value="8">Agosto</option>
-                                            <option value="9">Septiembre</option>
-                                            <option value="10">Octubre</option>
-                                            <option value="11">Noviembre</option>
-                                            <option value="12">Diciembre</option>
-                                        </select>
+                                        <label for="fechaInicio">Desde</label>
+                                        <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" required>
                                     </div>
 
 
                                     <div class="col-md-2">
-                                        <select name="anio" id="anio" class="form-select" required>
-                                            <option value="">Seleccione año</option>
-                                            <option value="2021">2021</option>
-                                            <option value="2022">2022</option>
-                                            <option value="2023">2023</option>
-                                        </select>
+                                        <label for="fechaFin">Hasta</label>
+                                        <input type="date" id="fechaFin" name="fechaFin" class="form-control" required>
                                     </div>
 
                                     <div class="col">
+                                        <label for="nombreCliente">Cliente</label>
                                         <div class="input-group">
                                             <!-- <input type="text" class="form-control" id="idCliente" name="idCliente" placeholder="Nombre cliente" required/> -->
                                             <input id="idCliente" id="idCliente" name="idCliente" value="" hidden type="text" />
@@ -227,8 +211,11 @@ $clientes = $objeto->listarClientes();
 
 
                                     <div class="col" style="text-align: left;">
-                                        <span class="btn btn-dark mb-2" id="filtro">Filtrar</span>
-                                        <button type="submit" class="btn btn-danger mb-2">Descargar Reporte</button>
+                                        <label></label>
+                                        <div class="d-flex">
+                                            <span class="btn btn-dark mb-2" id="filtro">Filtrar</span>
+                                            <button type="submit" class="btn btn-danger mb-2 ms-2">Descargar Reporte</button>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -331,21 +318,24 @@ $clientes = $objeto->listarClientes();
             e.preventDefault();
             $('#load').show();
 
-            var mes = $('#mes').val();
-            var anio = $('#anio').val();
+            var fechaInicio = $('#fechaInicio').val();
+            var fechaFin = $('#fechaFin').val();
             var idCliente = $('#idCliente').val();
-            console.log(mes + '' + anio + '' + idCliente);
 
-            if (mes == "") {
-                $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">Debe elegir el mes</p>');
-            } else if (anio == "") {
-                $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">Debe elegir el año</p>');
+            var fechaActual = new Date().toISOString().split('T')[0];
+
+            if (fechaInicio == "") {
+                $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">Debe elegir la fecha de inicio</p>');
+            } else if (fechaFin == "") {
+                $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">Debe elegir la fecha de fin</p>');
+            } else if (fechaFin > fechaActual) {
+                $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">La fecha de fin no puede ser mayor a hoy</p>');
             } else if (idCliente == "") {
                 $(".resultadoFiltro").html('<p style="color:red;  font-weight:bold;">Debe seleccionar un cliente</p>');
             } else {
                 $.post("filtroM.php", {
-                        mes,
-                        anio,
+                        fechaInicio,
+                        fechaFin,
                         idCliente
                     },
                     function(data) {

@@ -1,11 +1,11 @@
 <?php
   
-  $mes = $_POST['mes'];
-  $anio = $_POST['anio'];
+  $fechaInicio = $_POST['fechaInicio'];
+  $fechaFin = $_POST['fechaFin'];
 
   include_once('../../model/servicio.php');
   $objeto = new Servicio();
-  $servicio = $objeto-> todosServicio($mes, $anio);
+  $servicio = $objeto-> todosServicio($fechaInicio, $fechaFin);
 
   
 ?>

@@ -151,11 +151,15 @@
       parent::cerrar();
     }
 
-    public function listarMovimiento($mes, $anio, $id)
+    public function listarMovimiento($fechaInicio, $fechaFin, $id)
     {
       parent::conectar();
-      $listaM = parent::query('SELECT * FROM compras WHERE MONTH(fecha) = "'.$mes.'" AND YEAR(fecha) = "'.$anio.'" AND id_cliente="'.$id.'" ');
+      $fechaInicio = date('Y-m-d', strtotime($fechaInicio));
+      $fechaFin = date('Y-m-d', strtotime($fechaFin));
+      $listaM = parent::query('SELECT * FROM compras WHERE fecha BETWEEN "'.$fechaInicio.'" AND "'.$fechaFin.'" AND id_cliente="'.$id.'" ');
+      
       return $listaM;
+
       parent::cerrar();
     }
 

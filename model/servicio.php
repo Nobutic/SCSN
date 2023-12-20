@@ -121,9 +121,13 @@
             return $listaC;
             parent::cerrar();
         }
-        public function historialControl()
+        public function historialControl($startDate, $endDate)
         {
             parent::conectar();
+            $query = '';
+            if (!empty($startDate) && !empty($endDate)) {
+                $query = ' AND (s.fecha BETWEEN '.$startDate.' AND '.$endDate.')';
+            }
             $listaCH = parent::query('SELECT s.id_servicio, s.id_cliente, c.direccion, c.telefono, c.ciudad, c.email, DATE_FORMAT(s.fecha, "%d-%m-%Y") AS fecha, c.nombre AS cliente, m.nombre AS modulo, ts.nombre AS servicio, s.descripcion as actividades, s.hora_inicio, s.hora_fin, TIMESTAMPDIFF(MINUTE, s.hora_inicio, s.hora_fin) AS tiempo_conexion, s.tiempo, a.nombre AS asesor, s.persona_recibe, s.ticket, s.cargo, s.estado_control, ti.nombre AS tarea, t.descripcion AS descTarea, t.tarea_cliente
                                     FROM servicios s
                                     INNER JOIN modulos m ON m.id = s.modulo
@@ -133,6 +137,7 @@
                                     INNER JOIN tareas t ON t.id = s.id_servicio
                                     INNER JOIN tickets ti ON ti.id = t.id_ticket
                                     WHERE s.estado_control = "APROBADO"
+                                    '.$query.'
                                     ORDER BY s.fecha DESC; ');
             return $listaCH;
             parent::cerrar();

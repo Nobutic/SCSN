@@ -15,7 +15,10 @@ $_SESSION['tiempo'] = time();
 
 include_once '../../model/servicio.php';
 $objeto = new Servicio();
-$servicio = $objeto->historialControl();
+$startDate = $_POST['startDate'] ?? null;
+$endDate = $_POST['endDate'] ?? null;
+
+$servicio = $objeto->historialControl($startDate, $endDate);
 
 
 ?>
@@ -35,6 +38,7 @@ $servicio = $objeto->historialControl();
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../../resources/css/sweetalert.css">
     <script src="https://use.fontawesome.com/releases/v6.2.1/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <link rel="icon" href="/scsn/resources/img/favicon.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/scsn/resources/img/favicon.png" sizes="180x180" />
 </head>
@@ -172,6 +176,22 @@ $servicio = $objeto->historialControl();
             <main>
                 <div class="container-fluid px-4">
                     <br />
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="startDate">Fecha Inicial:</label>
+                            <input type="date" id="startDate" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endDate">Fecha Final:</label>
+                            <input type="date" id="endDate" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="clearFilters"></label>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-secondary" id="clearFilters">Limpiar Filtros</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="card mb-4">
                             <div class="card-header">
@@ -232,9 +252,6 @@ $servicio = $objeto->historialControl();
     <script src="/SCSN/resources/js/jquery.js"></script>
     <script src="/SCSN/resources/js/operaciones.js"></script>
     <script src="/SCSN/resources/js/sweetalert.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="/SCSN/assets/demo/chart-area-demo.js"></script>
-    <script src="/SCSN/assets/demo/chart-bar-demo.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.1/datatables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -248,7 +265,7 @@ $servicio = $objeto->historialControl();
                 }
             });
 
-            $('#tableServicio').DataTable({
+            var table = $('#tableServicio').DataTable({
                 searching: true,
                 ordering: true,
                 paging: true,
@@ -256,6 +273,41 @@ $servicio = $objeto->historialControl();
                 "language": {
                     "url": "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 }
+            });
+
+            // Add event listener to date inputs for filtering
+            $('#startDate, #endDate').change(function() {
+                table.draw();
+            });
+
+            // Add event listener to clear filters button
+            $('#clearFilters').on('click', function() {
+                // Clear date inputs
+                $('#startDate').val('');
+                $('#endDate').val('');
+
+                // Redraw the table to remove filters
+                table.draw();
+            });
+
+            // DataTable custom filter function
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
+                var rowDataDate = data[2]; // Assuming date is in the third column
+
+                // Parse dates to compare
+                var momentStartDate = moment(startDate, "YYYY-MM-DD");
+                var momentEndDate = moment(endDate, "YYYY-MM-DD");
+                var momentRowDate = moment(rowDataDate, "DD-MM-YYYY");
+
+                // Perform date range filtering
+                if ((startDate === '' && endDate === '') ||
+                    (startDate !== '' && endDate !== '' && momentRowDate.isBetween(momentStartDate, momentEndDate, null, '[]'))) {
+                    return true;
+                }
+
+                return false;
             });
 
             $(document).on('click', '.detalle', function(event) {

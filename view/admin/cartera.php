@@ -31,6 +31,7 @@ $cartera = $objeto->listarCartera();
     <title>Cartera :: INSU TI</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.1/datatables.min.css" />
     <link href="../../resources/css/styles.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../../resources/css/sweetalert.css">
     <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css">
     <script src="https://use.fontawesome.com/releases/v6.2.1/js/all.js" crossorigin="anonymous"></script>
@@ -214,7 +215,7 @@ $cartera = $objeto->listarCartera();
                                         <td><?php echo $dato['fecha_ven'] ?></td>
                                         <td>$<?php echo number_format($dato['valor']) ?></td>
                                         <td>$
-                                            <?php echo number_format($dato['sum_abono']) ?> <a type="button" data-bs-toggle="modal" data-bs-target="#abonos<?php echo $dato['id_compra'] ?>"><i class="fa fa-eye"></i></a>
+                                            <?php echo number_format($dato['sum_abono']) ?> <a type="button" class="abonos" aria-label="Detalle" data-balloon-pos="up" id="<?php echo $dato['id_compra'] ?>"><i class="fa fa-eye"></i></a>
 
                                         </td>
                                         <?php
@@ -226,10 +227,9 @@ $cartera = $objeto->listarCartera();
                                         <td>
                                             <?php
                                             if ($dato['valor'] - $dato['sum_abono'] > 0) { ?>
-                                                <button class="btn btn-success"><i class="fa-solid fa-hand-holding-medical" data-bs-toggle="modal" data-bs-target="#abonar<?php echo $dato['id_compra'] ?>"></i></button>
+                                                <a type="button" class="btn btn-success abonar" aria-label="Abonar" data-balloon-pos="up" id="<?php echo $dato['id_compra'] ?>"><i class="fa-solid fa-hand-holding-medical" ></i></a>
                                             <?php } ?>
-                                            <button class="btn btn-info"><i class="fa fa-edit" data-bs-toggle="modal" data-bs-target="#editarFactura<?php echo $dato['id_compra'] ?>"></i></button>
-                                            <?php include('modalCartera.php') ?>
+                                            <a type="button" class="btn btn-info editar" aria-label="Editar Factura" data-balloon-pos="up" id="<?php echo $dato['id_compra'] ?>"><i class="fa fa-edit"></i></a>
                                         </td>
 
                                     </tr>
@@ -237,7 +237,7 @@ $cartera = $objeto->listarCartera();
                             </tbody>
                         </table>
                     </div>
-
+                    <?php include('modalCartera.php') ?>
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
@@ -274,43 +274,50 @@ $cartera = $objeto->listarCartera();
                 this.value = (this.value + '').replace(/[^0-9\.-]/g, '');
             });
 
-            
-            //$('#editar_Factura').click(function() {
+            $(document).on('click', '.editar', function(event) {
+                var idCompra = $(this).attr('id');
+                $.ajax({
+                    url: "../../controller/admin/detalle_cartera.php",
+                    type: "POST",
+                    data: {
+                        idCompra: idCompra
+                    },
+                    success: function(data) {
+                        $('#editar').html(data);
+                        $('#Editar').modal('show');
+                    }
+                });
+            });
 
-                //alert('funcion click');
-                // var datosFactura = $('#formulario_eFactura').serialize();
+            $(document).on('click', '.abonar', function(event) {
+                var idCompra = $(this).attr('id');
+                $.ajax({
+                    url: "../../controller/admin/detalle_abonar.php",
+                    type: "POST",
+                    data: {
+                        idCompra: idCompra
+                    },
+                    success: function(data) {
+                        $('#abonar').html(data);
+                        $('#Abonar').modal('show');
+                    }
+                });
+            });
 
-                // $.ajax({
-                // method: 'POST',
-                // url: '../../controller/admin/editarFactura.php',
-                // data: datosFactura,
-                // beforeSend: function(){
-                //     $('#load').show();
-                // },
-                // success: function(res){
-                //     $('#load').hide();
-
-                //     if(res == 'error_1'){
-                //     swal({
-                //         title: 'Por favor llenar los campos vacios', 
-                //         type: 'error'
-                //     });
-                //     }else if(res == 'editar'){
-                //     swal({ 
-                //         title: "Actualización exitosa",
-                //         type: "success" 
-                //         },
-                //         function(){
-                //         window.location = 'cartera.php';
-                //     });
-                //     }else{
-                //     window.location.href = res ;
-                //     }
-
-                // }
-                // });
-            //});
-
+            $(document).on('click', '.abonos', function(event) {
+                var idCompra = $(this).attr('id');
+                $.ajax({
+                    url: "../../controller/admin/detalle_abono.php",
+                    type: "POST",
+                    data: {
+                        idCompra: idCompra
+                    },
+                    success: function(data) {
+                        $('#abonos').html(data);
+                        $('#Abonos').modal('show');
+                    }
+                });
+            });
         });
     </script>
 

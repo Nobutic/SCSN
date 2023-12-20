@@ -22,6 +22,21 @@
       parent::cerrar();
     }
 
+    public function carteraId($id){
+      parent::conectar();
+      $lista = parent::query('SELECT c.id_compra, c.id_factura, c.id_cliente, c.fecha, c.fecha_ven, c.valor, abonos.sum_abono, cl.nombre, c.tiempo
+                            FROM compras c 
+                            JOIN clientes cl ON c.id_cliente = cl.id
+                            LEFT JOIN (
+                              SELECT id_factura, SUM(abono) as sum_abono
+                              FROM movimientos
+                             GROUP BY id_factura
+                            ) abonos ON c.id_compra = abonos.id_factura
+                            WHERE c.id_compra = "'.$id.'" ');
+      return $lista;
+      parent::cerrar();
+    }
+
     public function abonar($idFactura, $valor, $fecha)
     {
       parent::conectar();

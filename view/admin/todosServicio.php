@@ -202,7 +202,7 @@ $clientes = $objeto->listarClientes();
                                     <div class="col" style="text-align: left;">
                                         <label></label>
                                         <div class="d-flex">
-                                            <span class="btn btn-dark mb-2" id="filtro">Filtrar</span>
+                                            <span class="btn btn-secondary mb-2" id="filtro">Filtrar</span>
                                             <button type="submit" class="btn btn-danger mb-2 ms-2">Descargar Reporte</button>
                                         </div>
                                     </div>

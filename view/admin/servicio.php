@@ -30,7 +30,6 @@ $clientes = $objeto->listarClientes();
     <meta name="author" content="Nobutic SAS" />
     <title>Servicio :: INSU TI</title>
     <link href="../../resources/css/styles.css" rel="stylesheet" />
-    <link href="../../reosurces/css/material.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.1/datatables.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../../resources/css/sweetalert.css">
@@ -214,8 +213,8 @@ $clientes = $objeto->listarClientes();
                                     <div class="col" style="text-align: left;">
                                         <label></label>
                                         <div class="d-flex">
-                                            <span class="btn btn-dark mb-2" id="filtro">Filtrar</span>
-                                            <button type="submit" class="btn btn-danger mb-2">Descargar Reporte</button>
+                                            <span class="btn btn-secondary mb-2" id="filtro">Filtrar</span>
+                                            <button type="submit" class="btn btn-danger mb-2 ms-2">Descargar Reporte</button>
                                         </div>
                                     </div>
 
@@ -294,10 +293,6 @@ $clientes = $objeto->listarClientes();
     <script src="/SCSN/resources/js/jquery.js"></script>
     <script src="/SCSN/resources/js/operaciones.js"></script>
     <script src="/SCSN/resources/js/sweetalert.min.js"></script>
-    <script src="/SCSN/resources/js/material.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="/SCSN/assets/demo/chart-area-demo.js"></script>
-    <script src="/SCSN/assets/demo/chart-bar-demo.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.1/datatables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {

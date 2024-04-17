@@ -13,9 +13,17 @@ if (!isset($_SESSION['cargo']) || $_SESSION['cargo'] != 3) {
 
 $_SESSION['tiempo'] = time();
 
-require_once '../../model/tarea.php';
-$objeto = new Tarea();
-$pendientes = $objeto->numPendientes($_SESSION['id']);
+if (isset($_POST['procesar']) || isset($_POST['action'])) {
+    $fecha = $_POST['fecha'];
+    $hora  = $_POST['hora'];
+    $datetime = date("c", strtotime($fecha . $hora));
+    $html_body = '';
+    $html_body = 'Fecha-Hora convertida: ' . $datetime;
+}
+
+include_once '../../model/asesor.php';
+$obj = new Asesor();
+$caledar = $obj->calendario_asesor($_SESSION['id']);
 ?>
 
 <!DOCTYPE html>
@@ -31,8 +39,24 @@ $pendientes = $objeto->numPendientes($_SESSION['id']);
     <link href="../../resources/css/styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../resources/css/sweetalert.css">
     <script src="https://use.fontawesome.com/releases/v6.2.1/js/all.js" crossorigin="anonymous"></script>
-    <link rel="icon" href="/scsn/resources/img/favicon.png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="/scsn/resources/img/favicon.png" sizes="180x180" />
+    <link rel='stylesheet' href='https://fullcalendar.io/releases/core/4.0.2/main.min.css'>
+    <link rel='stylesheet' href='https://fullcalendar.io/releases/daygrid/4.0.1/main.min.css'>
+    <link rel='stylesheet' href='https://fullcalendar.io/releases/list/4.0.1/main.min.css'>
+    <link rel="icon" href="../../resources/img/favicon.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="../../resources/img/favicon.png" sizes="180x180" />
+    <style type="text/css">
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed"><?php include_once('modalClave.php'); ?>
@@ -107,72 +131,26 @@ $pendientes = $objeto->numPendientes($_SESSION['id']);
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <div class="row">
-                        <div class="col-xl-3 col-md-6">
-                            <img width="315" height="116" src="/SCSN/resources/img/logo.png">
-                            <ol class="breadcrumb mb-4">
-                                <li class="breadcrumb-item active">Centro de Soporte</li>
-                            </ol>
-                        </div>
-                    </div>
 
                     <div class="row">
 
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-dark text-white mb-4">
-                                <div class="card-content">
-                                    <a type="button" class="nav-link text-white" href="tareas.php">
-                                        <div class="card-body">
-                                            <div class="card-footer d-flex align-items-center justify-content-between">
-                                                <div class="align-self-center">
-                                                    <i class="fa-solid fa-clipboard"></i>
-                                                </div>
-                                                <div class="media-body text-right">
-                                                    <h4><?php echo $pendientes ?></h4>
-                                                    <span>Tareas pendientes</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
+                    <h2>Subir una imagen</h2>
+                    <form action="/SCSN/controller/asesor/upload.php" method="post" enctype="multipart/form-data" class="form-control">
+                        <div class="row">
+                            <div class="col-3">
+                                <input type="file" name="file" class="form-control" required>
+                            </div>
+                            <div class="col">
+                                <div class="btn-group">
+                                    <a type="button" class="btn btn-secondary" href="javascript:history.back();">Cancelar</a>
+                                    <button type="submit" name="submit" class="btn btn-primary">Subir</button>
                                 </div>
                             </div>
                         </div>
+                    </form>
 
-
-                        <?php
-                        // ...
-
-                        // Obtener el nombre de usuario de la sesión
-                        $nombreUsuario = $_SESSION['id'];
-
-                        // Si el nombre de usuario es "Jopsan Rodriguez", mostramos la card adicional
-                        if ($nombreUsuario == 79723821) {
-                            // Aquí defines tu nueva card
-                        ?>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-content">
-                                        <a type="button" class="nav-link text-white" href="imagenes.php">
-                                            <div class="card-body">
-                                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                                    <div class="align-self-center">
-                                                        <i class="fa-solid fa-camera-retro"></i>
-                                                    </div>
-                                                    <div class="media-body text-right">
-                                                        <h4>Repositorio</h4>
-                                                        <span>de Imagenes</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php
-                        }
-
-                        // ...
-                        ?>
+                    <h2>Imágenes</h2>
+                    <div id="imageContainer"></div>
                     </div>
 
                 </div>
@@ -189,9 +167,26 @@ $pendientes = $objeto->numPendientes($_SESSION['id']);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="/SCSN/resources/js/scripts.js"></script>
     <script src="/SCSN/resources/js/jquery.js"></script>
-    <script src="/SCSN/resources/js/operaciones.js"></script>
     <script src="/SCSN/resources/js/sweetalert.min.js"></script>
+    <script src="/SCSN/resources/js/operaciones.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/gcal.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/locale/es.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script>
+        fetch('/SCSN/controller/asesor/get_images.php')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('imageContainer');
+                data.forEach(image => {
+                    const img = document.createElement('img');
+                    img.src = '/SCSN/controller/asesor/images/' + image;
+                    img.style.width = '200px'; // ajusta el tamaño según tus necesidades
+                    container.appendChild(img);
+                });
+            });
+    </script>
 </body>
 
 </html>
